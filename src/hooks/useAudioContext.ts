@@ -1,5 +1,6 @@
 import { useState } from "react";
 import createNoteTable from "../utils/noteTable";
+import voiceLibrary from "../utils/voiceSelect";
 
 //set up context and main nodes
 const audioContext = new AudioContext();
@@ -23,7 +24,10 @@ export default function useAudioContext() {
     gain: 0.1048
   });
 
+  const [voice, setVoice] = useState(voiceLibrary[1]);
   const [octaveModifier, setOctaveModifier] = useState(0);
+
+  mainGainNode.gain.value = sliders.gain / 10;
 
   const convertOctave = (modifier: number) => {
     switch (modifier) {
@@ -86,6 +90,7 @@ export default function useAudioContext() {
     mainGainNode,
     sliders,
     setSliders,
+    playTone,
     noteFreq
   }
 }
