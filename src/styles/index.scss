@@ -1,0 +1,22 @@
+@use "./variables.scss" as variables;
+
+:root {
+  height: 100%;
+  width: 100%;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: black;
+  background: linear-gradient(#000000, variables.$background-blue);
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
