@@ -1,6 +1,7 @@
 import { useState } from "react";
 import createNoteTable from "../utils/noteTable";
 import voiceLibrary from "../utils/voiceSelect";
+import delayInSeconds from "../utils/delay-in-seconds";
 
 //set up context and main nodes
 const audioContext = new AudioContext();
@@ -19,15 +20,43 @@ mainGainNode.connect(compressorNode);
 //note frequencies array
 const noteFreq = createNoteTable();
 
+//set empty octave objects to manage active pitches
+const oscList: any[] = [];
+
+for (let i = 0; i < 9; i++) {
+  oscList[i] = {};
+  const noteIds = [
+    "A",
+    "Ab",
+    "B",
+    "Bb",
+    "C",
+    "C#",
+    "D",
+    "E",
+    "Eb",
+    "F",
+    "F#",
+    "G",
+  ];
+  for (const noteId of noteIds) {
+    oscList[i][noteId] = [];
+  }
+}
+
 export default function useAudioContext() {
   const [sliders, setSliders] = useState({
-    gain: 0.1048
+    masterGain: 0.1048
   });
 
   const [voice, setVoice] = useState(voiceLibrary[1]);
   const [octaveModifier, setOctaveModifier] = useState(0);
 
-  mainGainNode.gain.value = sliders.gain / 10;
+  mainGainNode.gain.value = sliders.masterGain / 10;
+
+  const changeSliders = (slider: string, newValue: number) => {
+    setSliders(prev => ({...prev, [slider]: newValue}));
+  };
 
   const convertOctave = (modifier: number) => {
     switch (modifier) {
@@ -84,13 +113,35 @@ export default function useAudioContext() {
     return { voiceNode, voiceGainNode };
   };
 
+  const notePressed = (octave: string, note: string, freq: number) => {
+    const octaveIndex = Number(octave);
+    oscList[octaveIndex][note].push(playTone(freq));
+  }
+
+  const noteReleased = async (octave: string, note: string) => {
+    const octaveIndex = Number(octave);
+    const oldestPlayedNode = oscList[octaveIndex][note].shift();
+    if (oldestPlayedNode) {
+      const release = voice.envelope.release;
+      oldestPlayedNode.voiceGainNode.gain.exponentialRampToValueAtTime(
+        0,
+        audioContext.currentTime + release
+      );
+      // delay to allow for release to complete before node is disconnected
+      await delayInSeconds(release);
+      oldestPlayedNode.voiceNode.disconnect();
+    }
+  }
 
   return {
     audioContext,
+    noteFreq,
     mainGainNode,
     sliders,
+    changeSliders,
     setSliders,
     playTone,
-    noteFreq
+    notePressed,
+    noteReleased
   }
 }

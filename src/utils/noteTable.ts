@@ -2,7 +2,7 @@
 
 export default function createNoteTable() {
   const noteFreq = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i <= 5; i++) {
     if (i >= 3) {
       noteFreq[i] = {
         "C": 0,

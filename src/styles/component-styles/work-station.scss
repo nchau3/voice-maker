@@ -1,8 +1,13 @@
 @use "../variables.scss";
 
 #work-station {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 800px;
   height: 600px;
+
   background-color: variables.$keyboard-color;
   background: linear-gradient(45deg, black, variables.$keyboard-color);
   border: solid darken(variables.$keyboard-color, 5%);
