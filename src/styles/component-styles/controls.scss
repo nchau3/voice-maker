@@ -1,0 +1,52 @@
+@use "../variables.scss";
+@import "../mixins.scss";
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+
+  color: white;
+}
+
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+
+  label {
+    margin: .5em
+  }
+}
+
+.slider {
+  @include display;
+
+  display: flex;
+  justify-content: center;
+
+  height: 4rem;
+  width: 100%;
+}
+
+.slider-bar-container {
+  display: flex;
+  align-items: center;
+  width: 98%;
+  height: 100%;
+}
+
+.slider-bar {
+  height: 65%;
+  width: 2%;
+  margin-right: 3px;
+  background-color: variables.$display-color;
+  filter: invert(.45);
+}
+
+.active {
+  filter: none;
+}
