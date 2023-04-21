@@ -1,0 +1,25 @@
+@use "../variables.scss";
+
+#play-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 5rem;
+  height: 5rem;
+  font-size: 4rem;
+  padding: 4rem;
+  border-radius: 10rem;
+
+  background: linear-gradient(45deg, rgb(177, 41, 41), variables.$button-color);
+
+  transition: all 0.05s;
+
+  &:hover {
+    transform: scale(103%);
+  }
+
+  &:active {
+    transform: scale(1);
+  }
+}
