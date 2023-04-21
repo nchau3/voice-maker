@@ -19,7 +19,7 @@ export default function Controls(props: controlsProps) {
       <Slider 
         name={"masterGain"}
         minPos={1}
-        maxPos={50}
+        maxPos={75}
         minVal={0}
         maxVal={100}
         value={masterGain}
