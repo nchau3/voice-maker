@@ -3,11 +3,12 @@
 #work-station {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   width: 800px;
   height: 600px;
 
+  color: white;
   background-color: variables.$keyboard-color;
   background: linear-gradient(45deg, black, variables.$keyboard-color);
   border: solid darken(variables.$keyboard-color, 5%);

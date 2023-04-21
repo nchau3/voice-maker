@@ -2,6 +2,7 @@ import { useState } from "react";
 import createNoteTable from "../utils/noteTable";
 import voiceLibrary from "../utils/voiceSelect";
 import delayInSeconds from "../utils/delay-in-seconds";
+import actuallySetTargetAtTime from "../utils/actually-set-target-at-time";
 
 //set up context and main nodes
 const audioContext = new AudioContext();
@@ -108,24 +109,26 @@ export default function useAudioContext() {
     voiceGainNode.connect(mainGainNode);
 
     //attack envelope
-    voiceGainNode.gain.exponentialRampToValueAtTime(1, audioContext.currentTime + attack);
+    actuallySetTargetAtTime(voiceGainNode.gain, 1, audioContext.currentTime, attack);
 
     return { voiceNode, voiceGainNode };
   };
 
-  const notePressed = (octave: string, note: string, freq: number) => {
+  const notePressed = (octave: number, note: string, freq: number) => {
     const octaveIndex = Number(octave);
     oscList[octaveIndex][note].push(playTone(freq));
   }
 
-  const noteReleased = async (octave: string, note: string) => {
+  const noteReleased = async (octave: number, note: string) => {
     const octaveIndex = Number(octave);
     const oldestPlayedNode = oscList[octaveIndex][note].shift();
     if (oldestPlayedNode) {
       const release = voice.envelope.release;
-      oldestPlayedNode.voiceGainNode.gain.exponentialRampToValueAtTime(
+      actuallySetTargetAtTime(
+        oldestPlayedNode.voiceGainNode.gain,
         0,
-        audioContext.currentTime + release
+        audioContext.currentTime,
+        release
       );
       // delay to allow for release to complete before node is disconnected
       await delayInSeconds(release);
